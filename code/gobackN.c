@@ -1,114 +1,63 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <unistd.h>
-#include <signal.h>
-#include <setjmp.h>
 
-FILE *fp;
-bool ackReceived = false;
-jmp_buf env;
+#define MAX_SEQ 7 // Maximum sequence number
+#define TIMEOUT 5 // Timeout in seconds
 
-void handle_alarm(int sig) {
-    if (!ackReceived) {
-        longjmp(env, 1);
+bool ackReceived[MAX_SEQ + 1]; // Array to track acknowledgments
+int base = 0; // Base sequence number
+int nextSeqNum = 0; // Next sequence number to send
+
+void sendFrame(int seqNum) {
+    printf("Sender: Sending frame %d\n", seqNum);
+    // Simulate sending the frame
+    ackReceived[seqNum] = false;
+}
+
+void receiveAck(int seqNum) {
+    printf("Receiver: Receiving Acknowledgement for frame %d\n", seqNum);
+    ackReceived[seqNum] = true;
+}
+
+void resendFrames() {
+    printf("Timeout: Resending frames from %d\n", base);
+    for (int i = base; i <= nextSeqNum; i++) {
+        if (!ackReceived[i]) {
+            sendFrame(i);
+        }
     }
 }
 
-void openFile() {
-    fp = fopen("frames.txt", "w+");
-    if (fp == NULL) {
-        printf("Could not open file frames.txt");
-        exit(1);
-    }
-}
-
-void closeFile() {
-    fclose(fp);
-}
-
-void sendFrame() {
-    fprintf(fp, "Sender: Sending frame\n");
-    printf("Sender: Sending frame\n");
-}
-
-void receiveFrame() {
-    char frame[255];
-    if (fgets(frame, 255, fp) != NULL) {
-        printf("Receiver: Receiving frame\n");
-        printf("%s", frame);
-    }
-}
-
-void sendAck() {
-    fprintf(fp, "Receiver: Sending Acknowledgement\n");
-    printf("Receiver: Sending Acknowledgement\n");
-}
-
-void receiveAck() {
-    char ack[255];
-    if (fgets(ack, 255, fp) != NULL) {
-        printf("Sender: Receiving Acknowledgement\n");
-        printf("%s", ack);
-        ackReceived = true;
-    }
-}
-
-void getData() {
-    printf("Sender: Getting data\n");
-}
-
-void makeFrame() {
-    printf("Sender: Making frame\n");
-}
-
-void extractData() {
-    printf("Receiver: Extracting data\n");
-}
-
-void deliverData() {
-    printf("Receiver: Delivering data to network layer\n");
-}
-
-bool waitForEvent() {
-    sleep(1);
-    return true;
+void waitForEvent() {
+    sleep(1); // Simulate waiting for an event
 }
 
 int main() {
     bool isSender = true;
 
-    openFile();
-
-    signal(SIGALRM, handle_alarm);
-
     while (true) {
         if (waitForEvent()) {
             if (isSender) {
-                if (setjmp(env) == 0) {
-                    getData();
-                    makeFrame();
-                    sendFrame();
-                    alarm(5); // Set a timer for 5 seconds
-                    receiveAck();
-                    alarm(0); // Cancel the timer
-                } else {
-                    printf("Timeout: Resending frame\n");
-                    sendFrame();
-                    alarm(5); // Set a timer for 5 seconds
-                    receiveAck();
-                    alarm(0); // Cancel the timer
+                if (nextSeqNum <= MAX_SEQ) {
+                    sendFrame(nextSeqNum);
+                    nextSeqNum++;
+                }
+
+                // Simulate receiving an acknowledgment
+                receiveAck(nextSeqNum - 1);
+
+                // Check if all frames have been acknowledged
+                if (ackReceived[base]) {
+                    base++;
                 }
             } else {
-                receiveFrame();
-                extractData();
-                deliverData();
-                sendAck();
-                isSender = !isSender; // Only switch to sender after receiving Ack
+                // Simulate receiving a frame
+                receiveAck(nextSeqNum - 1);
+                isSender = !isSender; // Switch roles
             }
         }
     }
 
-    closeFile();
-
-    return 0;
+    return 0;
 }
