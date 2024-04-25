@@ -2,68 +2,66 @@
 #include <stdlib.h>
 #include <time.h>
 
-int windowsize = 4;
-int noofPacket, morePacket;
+#define WINDOW_SIZE 4
+#define MAX_PACKETS 10
 
-int receiver(int tmp1) {
+// Function to simulate packet loss
+int simulatePacketLoss(int windowSize) {
     srand(time(0));
-    return rand() % tmp1;
+    return rand() % windowSize;
 }
 
-int negack(int tmp1) {
+// Function to simulate acknowledgement
+int simulateAcknowledgement(int windowSize) {
     srand(time(0));
-    return rand() % tmp1;
-}
-
-int simulate(int windowsize) {
-    srand(time(0));
-    int tmp1 = rand();
-    if(tmp1 == 0)
-        tmp1 = simulate(windowsize);
-    int i = tmp1 % windowsize;
-    if(i == 0)
-        return windowsize;
-    else
-        return tmp1 % windowsize;
+    return rand() % windowSize;
 }
 
 int main() {
     srand(time(0));
-    noofPacket = rand() % 10;
-    printf("Number of frames is: %d\n", noofPacket);
-    morePacket = noofPacket;
+    int noOfPackets = rand() % MAX_PACKETS + 1; // Ensure at least one packet
+    printf("Number of packets to send: %d\n", noOfPackets);
 
-    int tmp1, tmp2, tmp3 = 0, tmp4 = 0, tmp5 = 0;
+    int windowSize = WINDOW_SIZE;
+    int packetsSent = 0;
+    int packetsAcknowledged = 0;
+    int base = 0;
 
-    while(morePacket >= 0) {
-        tmp1 = simulate(windowsize);
-        windowsize -= tmp1;
-        tmp4 += tmp1;
-
-        if(tmp4 > noofPacket)
-            tmp4 = noofPacket;
-
-        for(int i = noofPacket - morePacket; i <= tmp4; i++)
-            printf("\nSending Frame %d", i);
-
-        tmp2 = receiver(tmp1);
-        tmp3 += tmp2;
-
-        if(tmp3 > noofPacket)
-            tmp3 = noofPacket;
-
-        tmp2 = negack(tmp1);
-        tmp5 += tmp2;
-
-        if(tmp5 != 0) {
-            printf("\nNo acknowledgement for the frame %d", tmp5);
-            printf("\nRetransmitting frame %d", tmp5);
+    while (packetsAcknowledged < noOfPackets) {
+        // Send packets up to the window size
+        for (int i = base; i < base + windowSize && i < noOfPackets; i++) {
+            printf("Sending packet %d\n", i);
+            packetsSent++;
         }
-        morePacket -= tmp1;
 
-        if(windowsize <= 0)
-            windowsize = 4;
+        // Simulate acknowledgements
+        int ackCount = simulateAcknowledgement(windowSize);
+        packetsAcknowledged += ackCount;
+        printf("Received acknowledgements for %d packets\n", ackCount);
+
+        // Adjust the window size based on acknowledgements
+        if (ackCount > 0) {
+            base += ackCount;
+            windowSize = WINDOW_SIZE;
+        } else {
+            // If no acknowledgements, reduce the window size
+            windowSize = windowSize / 2;
+            if (windowSize < 1) {
+                windowSize = 1;
+            }
+        }
+
+        // Simulate packet loss
+        int lostPackets = simulatePacketLoss(windowSize);
+        if (lostPackets > 0) {
+            printf("Simulating packet loss for %d packets\n", lostPackets);
+            // Retransmit lost packets
+            for (int i = 0; i < lostPackets; i++) {
+                printf("Retransmitting packet %d\n", base + i);
+            }
+        }
     }
-    printf("\nSelective Repeat Protocol Ends. All packets are successfully transmitted.\n");
+
+    printf("All packets successfully transmitted.\n");
     return 0;
 }
