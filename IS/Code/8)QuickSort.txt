@@ -1,0 +1,15 @@
+Domains
+    List=integer*
+    X=integer
+Predicates
+    QSort(List,List)
+    Partition(integer,List,List,List)
+    append(List,List,List)
+Clauses
+    append([],List,List).
+    append([H:T],List,[H:T2]):-append(T,List,T2).
+    QSort([],[]).
+    QSort([H:T],S):-Partition(H,T,L,R),QSort(L,LS),QSort(R,Rs),append(LS,[H:RS],S).
+    Partition(X,[],[],[]).
+    Partition(X,[H:T],[H:L],R) :- H<X,Partition(X,T,L,R).
+    Partition(X,[H:T],L,[H:R]}) :- H>=X,Partition(X,T,L,R).

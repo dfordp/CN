@@ -1,0 +1,25 @@
+Domains
+    P=Symbol
+Predicates
+    Husband(P,P)
+    Wife(P,P)
+    Father(P,P)
+    Mother(P,P)
+    Grandfather(P,P)        
+    Grandmother(P,P)
+    Parent(P,P)
+    Son(P,P)
+    Daugther(P,P)
+    Male(P)
+    Female(P)
+Clauses
+    Husband("M","P").
+    Husband("BM","BP").
+    Father("D","P").
+    Mother("D","M").
+    Wife(X,Y):-Husband(Y,X).
+    Mother(X,Y):-Wife(Y,Z),Father(X,Z).
+    Parent(X,Y):-Mother(X,Y);Father(X,Y).
+    Son(X,Y):-Male(Y),Parent(Y,X).
+    Daugther(X,Y):-Female(Y),Parent(Y,X).
+    Grandfather(X,Y):-Father(X,Z),Father(Z,X).

@@ -1,0 +1,18 @@
+Domains
+    X=integer
+    List=integer*
+Predicates 
+    MS(List,List)
+    M(List,List,List)
+    D(List,List,List)
+Clauses
+    D([],[],[]).
+    D([X],[X],[]).
+    D([A,B:T],[A:T1],[B:T2]):-D(T,T1,T2).
+    M([],List,List).
+    M(List,[],List).
+    M([H1:T1],[H2:T2],[H3,T3]):-H1<H2,M(T1,[H2:T2],T3).
+    M([H1:T1],[H2:T2],[H3,T3]):-H1>H2,M([H1:T1],T2,T3).
+    MS([],[]).
+    MS([X],[X]).
+    MS([A,B:T],S):-D([A,B:T],L1,L2),MS(L1,S1),MS(L2,S2),M(S1,S2,S).

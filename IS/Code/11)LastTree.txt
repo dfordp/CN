@@ -1,0 +1,8 @@
+Domains
+    X=integer
+    List=integer*
+Predicates
+    last(List,integer)
+Clauses
+    last([H],H).
+    last([H:T],R):-last(T,R).

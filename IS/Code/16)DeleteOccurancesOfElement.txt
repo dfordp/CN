@@ -1,0 +1,9 @@
+Domains
+    X=integer*
+    Y=integer
+Predicates
+    delete(integer,X,X)
+Clauses
+    delete(_,_,[],[]).
+    delete(N,M,[N:T],[M:T2]):-delete(N,M,T,T2).
+    delete(N,M,[H:T],[H:T2]):-N<>H,delete(N,M,T,T2).

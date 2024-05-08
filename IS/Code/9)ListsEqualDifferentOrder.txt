@@ -1,0 +1,16 @@
+Domains
+    X=integer
+    L=integer*
+Predicates
+    Member(integer,L)
+    Equal(L,L)
+    Del(integer,L,L)
+Clauses
+    Del(_,[],[]).
+    Del(X,[X:T],T).
+    Del(X,[H:T],[H:T2]):-Del(X,T,T2),X<>H.
+    Member(X,[X:_]).
+    Member(X,[_:T]):-Member(X,T).
+    Equal([],[]).
+    Equal([X],[X]).
+    Equal([H1:T],L):-Member(H1,L),Del(H1,L,L3),Equal(T,L3).

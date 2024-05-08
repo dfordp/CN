@@ -1,0 +1,13 @@
+Domains
+    X=integer
+    X1=integer
+    X2=integer
+    A=integer
+    A1=integer
+    A2=integer
+Predicates
+    fib(integer,integer)
+Clauses
+    fib(0,1).
+    fib(1,1).
+    fib(A,X):-A1=A-1,A2=A-2,fib(A1,X1),fib(A2,X2),X=X1+X2;

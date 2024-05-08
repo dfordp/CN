@@ -1,0 +1,12 @@
+Domains
+    X=Integer
+    L=Integer*
+Predicates
+    I(Integer,L,L).
+    IS(L,L).
+Clauses
+    I(X,[],[X]).
+    I(X,[X1:L1],[X,X1:L1]):-X<X1.
+    I(X,[X1:L1],[X1:L1]):-I(X,L1,L),X>=X1.
+    IS([],[]).
+    IS([X:L],S):-IS(L,S1),I(X,S1,S).

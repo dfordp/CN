@@ -1,0 +1,11 @@
+Domains
+    List=integer*
+    X=integer
+Predicates
+    member(integer,List)
+    subset(List,List)
+Clauses
+    member(X,[X:_]).
+    member(X,[H:T]):-X<>H,member(X,T).
+    subset([],List).
+    subset([H:T],List):-member(H,List),subset(T,List).

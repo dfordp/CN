@@ -1,0 +1,7 @@
+Domains
+    X=integer*
+Predicates
+    concaten(X,X,X)
+Clauses
+    concaten([],X,X).
+    concaten([H:T],X,[H:T2]):-concaten(T,X,T2).

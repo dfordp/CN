@@ -1,0 +1,13 @@
+Domains
+    X=integer
+    List=integer*
+Predicates
+    member(integer,List)
+    inters(List,List,List)
+Clauses
+    member(X,[X:_]).
+    member(X,[H:T]):-X<>H,member(X,T).
+    inters([],List,[]).
+    inters(List,[],[]).
+    inters([H:T],List,T2):-not(member(H,List)),inters(T,List,T2).
+    inters([H:T],List,[H2:T2]):-member(H,List),inters(T,List,T2).

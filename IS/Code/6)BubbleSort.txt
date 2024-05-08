@@ -1,0 +1,11 @@
+Domains
+    List = Integer*
+Predicates
+    Bsort(List,List)
+    Swap(List,List)
+Clauses
+    Bsort([],[]).
+    Bsort(List,SL):-Swap(List,List1),!,Bsort(List1,SL).
+    Bsort(List,List).
+    Swap([X,Y:T] ,[Y,X:T]):-X>Y.
+    Swap([H:T],[H,T1]):-Swap(T,T1).

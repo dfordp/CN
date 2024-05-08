@@ -1,0 +1,8 @@
+Domains
+    X=integer*
+    Y=integer
+Predicates
+    append(integer,X,X)
+Clauses
+    append(Y, [], [Y]).
+    append(Y, [H|T], [H|T1]) :- append(Y, T, T1).

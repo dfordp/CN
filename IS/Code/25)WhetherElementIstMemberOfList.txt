@@ -1,0 +1,8 @@
+Domains
+    X = integer
+    List = integer*
+Predicates
+    member(integer,List)
+Clauses
+    member(X,[X:_]).
+    member(X,[H:T]):-X<>H,member(X,T).

@@ -1,0 +1,20 @@
+Domains
+    X=integer
+    L=integer*
+    A=integer
+    B=integer
+    M=integer
+Predicates
+    Min(integer,L,integer)
+    Ssort(L,L)
+    Remove(integer,L,L)
+    Append(L,L,L)
+Clauses
+    Ssort([],[]).
+    Ssort([M1:S],[H:T]):-Min(H,T,M1),Remove(M1,[H:T],N),Ssort(S,N).
+    Min(M,[],M).
+    Min(A,[H:T],M1):-A<H,Min(A,T,M1).
+    Min(A,[H:T],M1):-A>=H,Min(A,T,M1).
+    Append([],B,B).
+    Append([H:A],B,[H:AB]):-Append(A,B,AB).
+    Remove(X,L,N):-Append(A,[X:B],L),Append(A,B,N).

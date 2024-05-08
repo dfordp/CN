@@ -1,0 +1,11 @@
+Domains
+    X=integer*
+    Y=integer
+Predicates
+    append(X,X,X)
+    reverse(X,X)
+Clauses
+    append([],X,X).
+    append([H:T],X,[H:T2]):-append(T,X,T2).
+    reverse([],[]).
+    reverse([H:T],L2):-reverse(T,L1),append(L1,[H],L2).

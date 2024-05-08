@@ -1,0 +1,21 @@
+Domains
+    X=Symbol
+    List=Symbol*
+Predicates
+    DFS(List,Symbol,List)
+    Child(Symbol,List)
+    append(List,List,List)
+Clauses
+    DFS([H:_],H,[H]).
+    DFS([H:T],Y,P):-H<>Y,Children(H,L1),append(L1,T,NT),DFS(NT,Y,NP),append([H],NP,P).
+    append([],List,List).
+    append([H:T],List,[H:L2]):-append(T,List,L2)/
+    Children(a,[b,c,d]).
+    Children(b,[e,f]).
+    Children(c,[g]).
+    Children(d,[h,i]).
+    Children(e,[]).
+    Children(f,[]).
+    Children(g,[]).
+    Children(h,[]).
+    Children(i,[]).

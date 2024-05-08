@@ -1,0 +1,13 @@
+Domains
+    X=integer
+    List=integer*
+Predicates
+    member(integer,List)
+    union(List,List,List)
+Clauses
+    member(X,[X:_]).
+    member(X,[H:T]):-X<>H,member(X,T).
+    union([],List,[]).
+    union(List,[],[]).
+    union([H:T],List,T2):-member(H,List),union(T,List,T2).
+    union([H:T],List,[H2:T2]):-not(member(H,List)),union(T,List,T2).

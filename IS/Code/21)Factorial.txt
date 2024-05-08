@@ -1,0 +1,8 @@
+Domains
+    X=integer
+    Y=integer
+Predicates
+    fact(X,Y)
+Clauses
+    fact(0,1).
+    fact(X,Y):-H=X-1,fact(H,M),Y=X*M.

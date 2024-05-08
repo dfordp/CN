@@ -1,0 +1,8 @@
+Domains
+    List=integer*
+    X=integer
+Predicates
+    sum(List,X)
+Clauses
+    sum([],0).
+    sum([H:T],X):-sum(T,M),X=H+M.
